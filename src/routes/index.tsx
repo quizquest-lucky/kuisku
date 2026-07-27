@@ -152,6 +152,13 @@ function KuisKuApp() {
     });
   }, []);
 
+  const handleLogout = useCallback(() => {
+    clearProfile();
+    setProfile(null);
+    setScreen({ name: "welcome" });
+    toast.success("Kamu sudah keluar dari akun");
+  }, []);
+
   const backToDashboard = useCallback(() => {
     setScreen({ name: "dashboard" });
     setLeaderboardKey((k) => k + 1);
@@ -169,17 +176,12 @@ function KuisKuApp() {
 
       try {
         const result = await generateQuestions({
-          data: {
-            tier,
-            classNumber,
-            subject,
-            userApiKey: geminiKey || undefined,
-          },
+          data: { tier, classNumber, subject },
         });
         questions = result.questions;
         if (result.error) console.error("[quiz]", result.error);
       } catch (error) {
-        console.error("[quiz] gagal memanggil AI:", error);
+        console.error("[quiz] gagal menyiapkan soal:", error);
       }
 
       if (questions.length < QUESTIONS_PER_SESSION) {
@@ -190,7 +192,7 @@ function KuisKuApp() {
         );
         questions = [...questions, ...filler];
         usedFallback = true;
-        toast.warning("AI sedang sibuk", {
+        toast.warning("Koneksi sedang lambat", {
           description: "Sebagian soal diambil dari bank soal offline.",
         });
       }
@@ -204,7 +206,7 @@ function KuisKuApp() {
         usedFallback,
       });
     },
-    [geminiKey],
+    [],
   );
 
   if (!ready) {
@@ -220,17 +222,15 @@ function KuisKuApp() {
       ) : screen.name === "dashboard" ? (
         <DashboardScreen
           profile={profile}
-          geminiKey={geminiKey}
           leaderboardKey={leaderboardKey}
-          onSaveGeminiKey={(key) => {
-            saveGeminiKey(key);
-            setGeminiKey(key.trim());
-            toast.success(key.trim() ? "API Key tersimpan" : "API Key dihapus");
-          }}
+          onLogout={handleLogout}
+          onOpenEvents={() => setScreen({ name: "events" })}
           onStartPrep={(tier, classNumber, subject) =>
             setScreen({ name: "prep", tier, classNumber, subject })
           }
         />
+      ) : screen.name === "events" ? (
+        <EventScreen onBack={() => setScreen({ name: "dashboard" })} />
       ) : screen.name === "prep" ? (
         <PrepScreen
           tier={screen.tier}
