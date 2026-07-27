@@ -24,9 +24,6 @@ export function DashboardScreen({
   const [settingsOpen, setSettingsOpen] = useState(false);
   const [confirmLogout, setConfirmLogout] = useState(false);
 
-
-  const adsInCycle = profile.totalAdsWatched % AD_MILESTONE;
-
   return (
     <main className="min-h-dvh px-4 pt-6 pb-10">
       <header className="glass grid grid-cols-[minmax(0,1fr)_auto] items-center gap-3 rounded-3xl p-4">
@@ -45,7 +42,7 @@ export function DashboardScreen({
           type="button"
           aria-label="Pengaturan"
           onClick={() => {
-            setKeyDraft(geminiKey);
+            setConfirmLogout(false);
             setSettingsOpen(true);
           }}
           className="grid size-10 shrink-0 place-items-center rounded-2xl bg-secondary/70 text-muted-foreground transition-colors hover:text-foreground"
@@ -58,15 +55,20 @@ export function DashboardScreen({
             <p className="text-[11px] text-muted-foreground">Total Skor</p>
             <p className="text-xl font-black text-neon-green">{profile.totalScore}</p>
           </div>
-          <div className="rounded-2xl bg-secondary/50 px-3 py-2">
+          <button
+            type="button"
+            onClick={onOpenEvents}
+            className="rounded-2xl bg-secondary/50 px-3 py-2 text-left transition-transform active:scale-95"
+          >
             <p className="flex items-center gap-1 text-[11px] text-muted-foreground">
-              <Tv className="size-3 shrink-0" /> Iklan Ditonton
+              <CalendarDays className="size-3 shrink-0" /> Hadiah Musiman
             </p>
-            <p className="text-xl font-black text-neon-cyan">
-              {adsInCycle}/{AD_MILESTONE}
+            <p className="flex items-center gap-1 text-xl font-black text-neon-cyan">
+              Event <ChevronRight className="size-4" />
             </p>
-          </div>
+          </button>
         </div>
+
       </header>
 
       <div className="mt-5 space-y-5">
