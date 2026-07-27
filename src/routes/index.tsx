@@ -31,7 +31,7 @@ import {
 
 const TITLE = "KuisKu — Kuis Seru SD, SMP & SMA";
 const DESCRIPTION =
-  "Main kuis pilihan ganda bertenaga AI untuk jenjang SD, SMP, dan SMA. Kumpulkan poin, hidupkan lagi permainan, dan naik ke papan peringkat.";
+  "Main kuis pilihan ganda untuk jenjang SD, SMP, dan SMA. Kumpulkan poin, hidupkan lagi permainan, dan naik ke papan peringkat.";
 
 export const Route = createFileRoute("/")({
   head: () => ({

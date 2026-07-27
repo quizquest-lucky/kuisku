@@ -83,7 +83,7 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
       { title: "KuisKu — Kuis Seru SD, SMP & SMA" },
       {
         name: "description",
-        content: "Kuis pilihan ganda bertenaga AI untuk pelajar SD, SMP, dan SMA.",
+        content: "Kuis pilihan ganda seru untuk pelajar SD, SMP, dan SMA.",
       },
       { name: "theme-color", content: "#020617" },
       { property: "og:type", content: "website" },
