@@ -1,28 +1,29 @@
 import { useState } from "react";
-import { ArrowLeft, ChevronRight, KeyRound, Settings, Tv, X } from "lucide-react";
+import { ArrowLeft, CalendarDays, ChevronRight, LogOut, Settings, X } from "lucide-react";
 
 import { LeaderboardPanel } from "./LeaderboardPanel";
-import { AD_MILESTONE, SUBJECTS, TIERS, type Subject, type TierId } from "@/lib/quiz-config";
+import { SUBJECTS, TIERS, type Subject, type TierId } from "@/lib/quiz-config";
 import type { PlayerProfile } from "@/lib/player-storage";
 
 type Step = { kind: "tier" } | { kind: "class"; tier: TierId } | { kind: "subject"; tier: TierId; classNumber: number };
 
 export function DashboardScreen({
   profile,
-  geminiKey,
-  onSaveGeminiKey,
+  onLogout,
+  onOpenEvents,
   onStartPrep,
   leaderboardKey,
 }: {
   profile: PlayerProfile;
-  geminiKey: string;
-  onSaveGeminiKey: (key: string) => void;
+  onLogout: () => void;
+  onOpenEvents: () => void;
   onStartPrep: (tier: TierId, classNumber: number, subject: Subject) => void;
   leaderboardKey: number;
 }) {
   const [step, setStep] = useState<Step>({ kind: "tier" });
   const [settingsOpen, setSettingsOpen] = useState(false);
-  const [keyDraft, setKeyDraft] = useState(geminiKey);
+  const [confirmLogout, setConfirmLogout] = useState(false);
+
 
   const adsInCycle = profile.totalAdsWatched % AD_MILESTONE;
 
