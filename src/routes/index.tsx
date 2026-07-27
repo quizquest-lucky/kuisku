@@ -50,6 +50,7 @@ export const Route = createFileRoute("/")({
 type Screen =
   | { name: "welcome" }
   | { name: "dashboard" }
+  | { name: "events" }
   | { name: "prep"; tier: TierId; classNumber: number; subject: Subject }
   | { name: "loading"; tier: TierId; classNumber: number; subject: Subject }
   | {
@@ -64,13 +65,12 @@ type Screen =
 function KuisKuApp() {
   const [ready, setReady] = useState(false);
   const [profile, setProfile] = useState<PlayerProfile | null>(null);
-  const [geminiKey, setGeminiKey] = useState("");
   const [screen, setScreen] = useState<Screen>({ name: "welcome" });
   const [leaderboardKey, setLeaderboardKey] = useState(0);
 
   useEffect(() => {
     const stored = loadProfile();
-    setGeminiKey(loadGeminiKey());
+    purgeLegacyGeminiKey();
     if (stored) {
       setProfile(stored);
       setScreen({ name: "dashboard" });
