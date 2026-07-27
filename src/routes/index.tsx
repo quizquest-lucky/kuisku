@@ -4,6 +4,7 @@ import { toast, Toaster } from "sonner";
 
 import { WelcomeScreen } from "@/components/quiz/WelcomeScreen";
 import { DashboardScreen } from "@/components/quiz/DashboardScreen";
+import { EventScreen } from "@/components/quiz/EventScreen";
 import { PrepScreen } from "@/components/quiz/PrepScreen";
 import { LoadingScreen } from "@/components/quiz/LoadingScreen";
 import { GameScreen } from "@/components/quiz/GameScreen";
@@ -20,10 +21,10 @@ import {
   type TierId,
 } from "@/lib/quiz-config";
 import {
+  clearProfile,
   createProfile,
-  loadGeminiKey,
   loadProfile,
-  saveGeminiKey,
+  purgeLegacyGeminiKey,
   saveProfile,
   type PlayerProfile,
 } from "@/lib/player-storage";
