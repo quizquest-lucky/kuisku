@@ -157,9 +157,15 @@ export function DashboardScreen({
           </section>
         ) : null}
 
-        <div className="glass rounded-2xl p-4 text-center">
-          <p className="text-[11px] tracking-wide text-muted-foreground uppercase">Iklan Sponsor</p>
-          <p className="mt-1 text-sm font-semibold text-muted-foreground">Ruang iklan 320x100</p>
+        <div className="space-y-3">
+          <div className="glass rounded-2xl p-4 text-center">
+            <p className="text-[11px] tracking-wide text-muted-foreground uppercase">Iklan Sponsor</p>
+            <p className="mt-1 text-sm font-semibold text-muted-foreground">Ruang iklan 320x100</p>
+          </div>
+          <div className="glass rounded-2xl p-4 text-center">
+            <p className="text-[11px] tracking-wide text-muted-foreground uppercase">Iklan Sponsor</p>
+            <p className="mt-1 text-sm font-semibold text-muted-foreground">Ruang iklan 320x100</p>
+          </div>
         </div>
       </div>
 
@@ -168,7 +174,7 @@ export function DashboardScreen({
           <div className="animate-pop glass w-full rounded-t-3xl p-5 pb-8">
             <div className="mb-4 grid grid-cols-[minmax(0,1fr)_auto] items-center gap-3">
               <h2 className="flex min-w-0 items-center gap-2 text-lg font-black">
-                <KeyRound className="size-5 shrink-0 text-primary" />
+                <Settings className="size-5 shrink-0 text-primary" />
                 <span className="truncate">Pengaturan</span>
               </h2>
               <button
@@ -181,35 +187,58 @@ export function DashboardScreen({
               </button>
             </div>
 
-            <label htmlFor="gemini" className="text-xs font-bold text-muted-foreground uppercase">
-              Google Gemini API Key (opsional)
-            </label>
-            <input
-              id="gemini"
-              type="password"
-              value={keyDraft}
-              onChange={(event) => setKeyDraft(event.target.value)}
-              placeholder="AIza..."
-              className="mt-2 w-full rounded-2xl border border-input bg-background/60 px-4 py-3 text-sm outline-none focus:ring-2 focus:ring-ring"
-            />
-            <p className="mt-2 text-xs text-muted-foreground">
-              Kosongkan saja untuk memakai AI bawaan aplikasi. Kunci disimpan di perangkat kamu.
-            </p>
+            <div className="flex min-w-0 items-center gap-3 rounded-2xl bg-secondary/50 p-3">
+              <img
+                src={profile.avatarUrl}
+                alt=""
+                className="size-11 shrink-0 rounded-full bg-secondary"
+              />
+              <div className="min-w-0">
+                <p className="truncate text-sm font-black">{profile.username}</p>
+                <p className="truncate font-mono text-[11px] text-muted-foreground">
+                  {profile.playerId}
+                </p>
+              </div>
+            </div>
 
-            <button
-              type="button"
-              onClick={() => {
-                onSaveGeminiKey(keyDraft);
-                setSettingsOpen(false);
-              }}
-              className="mt-4 w-full rounded-2xl bg-primary px-6 py-3.5 font-black text-primary-foreground shadow-[var(--shadow-neon)] active:scale-[0.98]"
-            >
-              Simpan
-            </button>
+            {confirmLogout ? (
+              <>
+                <p className="mt-4 text-sm text-muted-foreground">
+                  Yakin keluar? Data profil di perangkat ini akan dihapus, tapi skor kamu tetap ada
+                  di papan peringkat.
+                </p>
+                <div className="mt-4 grid grid-cols-2 gap-3">
+                  <button
+                    type="button"
+                    onClick={() => setConfirmLogout(false)}
+                    className="rounded-2xl bg-secondary/70 px-4 py-3.5 font-bold"
+                  >
+                    Batal
+                  </button>
+                  <button
+                    type="button"
+                    onClick={onLogout}
+                    className="rounded-2xl bg-destructive px-4 py-3.5 font-black text-destructive-foreground active:scale-[0.98]"
+                  >
+                    Ya, Keluar
+                  </button>
+                </div>
+              </>
+            ) : (
+              <button
+                type="button"
+                onClick={() => setConfirmLogout(true)}
+                className="mt-4 flex w-full items-center justify-center gap-2 rounded-2xl bg-destructive/15 px-6 py-3.5 font-black text-destructive ring-1 ring-destructive/40 active:scale-[0.98]"
+              >
+                <LogOut className="size-5" />
+                Keluar Akun
+              </button>
+            )}
           </div>
         </div>
       ) : null}
     </main>
+
   );
 }
 
