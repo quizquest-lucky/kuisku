@@ -9,9 +9,9 @@ export function LoadingScreen({ subject, classNumber }: { subject: string; class
         <Loader2 className="size-12 animate-spin text-primary" />
       </div>
 
-      <h1 className="mt-8 text-2xl font-black">Menyiapkan AI...</h1>
+      <h1 className="mt-8 text-2xl font-black">Menyiapkan Soal...</h1>
       <p className="mt-2 max-w-xs text-sm text-muted-foreground">
-        Membuat 20 soal {subject} untuk kelas {classNumber}. Tunggu sebentar ya.
+        Menyiapkan 20 soal {subject} untuk kelas {classNumber}. Tunggu sebentar ya.
       </p>
 
       <p className="mt-8 flex items-center gap-2 text-xs text-muted-foreground">

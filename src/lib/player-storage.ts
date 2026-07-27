@@ -71,13 +71,8 @@ export function clearProfile() {
   window.localStorage.removeItem(PROFILE_KEY);
 }
 
-export function loadGeminiKey(): string {
-  if (typeof window === "undefined") return "";
-  return window.localStorage.getItem(GEMINI_KEY) ?? "";
-}
-
-export function saveGeminiKey(key: string) {
+/** Bersihkan kunci API lama yang mungkin masih tersimpan di perangkat. */
+export function purgeLegacyGeminiKey() {
   if (typeof window === "undefined") return;
-  if (key.trim()) window.localStorage.setItem(GEMINI_KEY, key.trim());
-  else window.localStorage.removeItem(GEMINI_KEY);
+  window.localStorage.removeItem(GEMINI_KEY);
 }

@@ -135,7 +135,7 @@ export function GameScreen({
 
       {usedFallback ? (
         <p className="mt-3 rounded-xl bg-neon-amber/15 px-3 py-2 text-[11px] text-neon-amber">
-          AI sedang sibuk — soal diambil dari bank soal offline.
+          Koneksi lambat — soal diambil dari bank soal offline.
         </p>
       ) : null}
 

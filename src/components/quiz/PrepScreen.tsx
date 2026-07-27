@@ -1,4 +1,4 @@
-import { ArrowLeft, AlertTriangle, Play } from "lucide-react";
+import { ArrowLeft, Play } from "lucide-react";
 
 import { getTier, type Subject, type TierId } from "@/lib/quiz-config";
 
@@ -39,15 +39,8 @@ export function PrepScreen({
             <Stat label="Waktu" value={`${tierInfo.timer}s`} />
           </dl>
 
-          <div className="mt-5 flex items-start gap-3 rounded-2xl bg-destructive/15 p-4 ring-1 ring-destructive/40">
-            <AlertTriangle className="mt-0.5 size-5 shrink-0 text-destructive" />
-            <p className="text-sm font-semibold text-foreground">
-              1 Salah atau Waktu Habis = Game Over (Bisa Lanjut dengan Nonton Iklan)
-            </p>
-          </div>
-
-          <ul className="mt-4 space-y-1.5 text-sm text-muted-foreground">
-            <li>• 20 soal pilihan ganda dibuat oleh AI</li>
+          <ul className="mt-5 space-y-1.5 text-sm text-muted-foreground">
+            <li>• 20 soal pilihan ganda</li>
             <li>• Jawaban benar bernilai +5 poin</li>
             <li>• Poin masuk ke papan peringkat jenjang {tierInfo.name}</li>
           </ul>
