@@ -5,7 +5,6 @@ const GenerateSchema = z.object({
   tier: z.enum(["SD", "SMP", "SMA"]),
   classNumber: z.number().int().min(1).max(12),
   subject: z.string().min(1).max(40),
-  userApiKey: z.string().max(200).optional(),
 });
 
 const SyncSchema = z.object({
@@ -29,7 +28,6 @@ export const generateQuestions = createServerFn({ method: "POST" })
         classNumber: data.classNumber,
         subject: data.subject,
         count: 20,
-        userApiKey: data.userApiKey?.trim() || undefined,
       });
       if (questions.length < 20) {
         return { questions, source: "ai-partial" as const, error: null as string | null };
