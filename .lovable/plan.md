@@ -1,41 +1,36 @@
 ## Tujuan
 
-Menghilangkan semua penyebutan "AI" di antarmuka, mengganti menu pengaturan dengan tombol Keluar Akun, menambahkan Halaman Event, dan menambah satu slot iklan.
+Pendaftaran kini memakai **username + sandi**. Username yang sudah dipakai ditolak, dan setelah keluar akun pengguna bisa masuk lagi dengan username + sandi yang sama, dengan skor lamanya kembali.
 
-## 1. Halaman Detail Kuis (PrepScreen)
+## Perubahan database
 
-- Hapus kotak peringatan merah "1 Salah atau Waktu Habis = Game Over (Bisa Lanjut dengan Nonton Iklan)".
-- Ubah butir daftar "20 soal pilihan ganda dibuat oleh AI" → "20 soal pilihan ganda".
-- Dua butir lain (poin +5 dan papan peringkat) tetap.
+Tabel baru `player_credentials` (terpisah dari `players` supaya hash sandi tidak pernah ikut terbaca di leaderboard publik):
+- `player_id` (kunci utama, mengacu ke pemain)
+- `username_lower` unik — mencegah nama ganda tanpa peduli huruf besar/kecil
+- `password_hash`, `password_salt`
+- Tanpa akses publik sama sekali; hanya dibaca/ditulis lewat fungsi server tepercaya.
 
-## 2. Halaman Loading
+Tabel `players` juga diberi indeks unik pada username (huruf kecil).
 
-- Judul "Menyiapkan AI..." → "Menyiapkan Soal...".
-- Deskripsi → "Menyiapkan 20 soal {mapel} untuk kelas {kelas}."
-- Baris bawah "Soal dibuat khusus untuk sesi ini" tetap (tanpa kata AI).
-- Cek juga pesan lain yang menyebut AI (mis. notifikasi "AI sedang sibuk" saat fallback) dan ubah jadi netral, contoh "Koneksi lambat — sebagian soal diambil dari bank soal offline."
+## Fungsi server baru
 
-## 3. Menu Pengaturan → Logout
+- **Daftar** — validasi username (3–20 karakter) dan sandi (minimal 6 karakter), cek ketersediaan nama, buat Player ID + avatar, simpan hash sandi (PBKDF2 via Web Crypto, salt acak per pemain), lalu kembalikan profil awal. Jika nama sudah dipakai → pesan "Username sudah dipakai, coba nama lain".
+- **Masuk** — cari username, verifikasi sandi, lalu kembalikan profil lengkap dari database (total skor, skor per jenjang, jumlah iklan) sehingga progres pulih di perangkat mana pun.
+- **Cek username** (opsional, dipakai saat mengetik) — memberi tanda hijau/merah ketersediaan nama secara langsung.
 
-- Hapus seluruh bagian input Google Gemini API Key dari panel pengaturan.
-- Panel pengaturan kini berisi ringkasan akun (username + Player ID) dan tombol merah **Keluar Akun**, dengan konfirmasi singkat sebelum keluar.
-- Keluar akun: hapus profil dari penyimpanan perangkat, kembali ke layar Welcome. Skor yang sudah tersimpan di papan peringkat cloud tetap ada.
-- Hapus penyimpanan & penggunaan kunci Gemini sepenuhnya: hapus helper penyimpanan kunci, hapus state `geminiKey` di route utama, dan hapus pengiriman `userApiKey` ke fungsi pembuat soal. Kunci lama di perangkat dibersihkan otomatis saat aplikasi dibuka.
+Semua respons gagal memakai pesan umum ("Username atau sandi salah") agar tidak membocorkan akun mana yang ada.
 
-## 4. Kartu "Event" & Halaman Event
+## Perubahan UI
 
-- Di dashboard, kartu statistik "Iklan Ditonton" diganti menjadi kartu tombol **Event** (ikon kalender/hadiah, gaya neon sesuai tema) di sebelah Total Skor.
-- Klik → membuka Halaman Event (layar baru dalam alur aplikasi, dengan tombol Kembali), berisi 3 kotak:
-  1. **Event Juli** — detail hadiah, status "Aktif" hanya di bulan Juli, selain itu bertanda terkunci / "Segera Hadir".
-  2. **Event Desember** — sama, aktif hanya di bulan Desember.
-  3. **Gabung Saluran WhatsApp** — membuka https://whatsapp.com/channel/0029VbDaqXyFMqrfR1JsLy2I di tab baru.
-- Kotak event menampilkan syarat dan hadiah (mis. bonus poin & lencana musiman); tidak ada mekanisme klaim pada tahap ini.
+`WelcomeScreen` menjadi layar dua mode dengan tab **Daftar** / **Masuk**:
+- Daftar: input Nama Pemain, Sandi, Konfirmasi Sandi, pratinjau avatar, indikator ketersediaan nama.
+- Masuk: input Nama Pemain + Sandi.
+- Tombol punya keadaan memuat dan menampilkan pesan galat di bawah input (Bahasa Indonesia).
 
-## 5. Slot Iklan Kedua
-
-- Di bagian bawah dashboard, tampilkan dua slot iklan bertumpuk (masing-masing bergaya glass, label "Iklan Sponsor", ukuran 320x100).
+`src/routes/index.tsx` memanggil fungsi daftar/masuk, menyimpan profil hasilnya ke localStorage, lalu masuk ke dashboard. Alur keluar akun tetap seperti sekarang (hapus profil lokal) — data di cloud tetap aman sehingga bisa dipakai masuk lagi.
 
 ## Catatan teknis
 
-- File yang disentuh: `src/components/quiz/PrepScreen.tsx`, `LoadingScreen.tsx`, `DashboardScreen.tsx`, komponen baru `EventScreen.tsx`, `src/lib/player-storage.ts`, `src/lib/quiz.functions.ts` / `quiz-ai.server.ts` (hapus jalur `userApiKey`), dan `src/routes/index.tsx` (state layar `event`, handler logout).
-- Pembuatan soal tetap memakai model bawaan aplikasi di sisi server; hanya penyebutan di UI yang dihapus.
+- Hash sandi memakai `crypto.subtle` PBKDF2-SHA256 (kompatibel runtime server), bukan library Node-only.
+- Penulisan kredensial memakai klien admin di dalam handler fungsi server; sandi tidak pernah dikirim balik ke browser.
+- Pemain lama yang sudah ada di perangkat tetap bisa main; saat mereka keluar dan ingin masuk lagi mereka perlu mendaftar ulang (akun lama belum punya sandi). Ini akan dijelaskan lewat teks kecil di layar Masuk.
