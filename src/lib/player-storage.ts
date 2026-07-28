@@ -19,18 +19,24 @@ export function avatarUrlFor(seed: string) {
   return `https://api.dicebear.com/7.x/avataaars/svg?seed=${encodeURIComponent(seed)}`;
 }
 
-export function createProfile(username: string): PlayerProfile {
-  const random = Math.random().toString(36).slice(2, 7).toUpperCase();
+export function profileFromAuth(input: {
+  playerId: string;
+  username: string;
+  avatarSeed: string;
+  totalScore: number;
+  tierScores: Record<TierId, number>;
+  totalAdsWatched: number;
+}): PlayerProfile {
   return {
-    playerId: `PLY-${Date.now().toString(36).toUpperCase().slice(-5)}${random}`,
-    username,
-    avatarSeed: username,
-    avatarUrl: avatarUrlFor(username),
-    totalScore: 0,
-    tierScores: { SD: 0, SMP: 0, SMA: 0 },
-    totalAdsWatched: 0,
-    milestonesReached: 0,
-    badges: [],
+    playerId: input.playerId,
+    username: input.username,
+    avatarSeed: input.avatarSeed,
+    avatarUrl: avatarUrlFor(input.avatarSeed),
+    totalScore: input.totalScore,
+    tierScores: input.tierScores,
+    totalAdsWatched: input.totalAdsWatched,
+    milestonesReached: Math.floor(input.totalAdsWatched / 10),
+    badges: input.totalAdsWatched >= 10 ? ["Penonton Setia"] : [],
   };
 }
 
