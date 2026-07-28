@@ -246,7 +246,7 @@ function KuisKuApp() {
       <Toaster position="top-center" theme="dark" richColors />
 
       {!profile || screen.name === "welcome" ? (
-        <WelcomeScreen onSubmit={handleRegister} />
+        <WelcomeScreen onRegister={handleRegister} onLogin={handleLogin} />
       ) : screen.name === "dashboard" ? (
         <DashboardScreen
           profile={profile}
