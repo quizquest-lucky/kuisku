@@ -98,13 +98,41 @@ function KuisKuApp() {
   }, []);
 
   const handleRegister = useCallback(
-    (username: string) => {
-      const next = createProfile(username);
-      persist(next);
-      setScreen({ name: "dashboard" });
-      setLeaderboardKey((k) => k + 1);
+    async (username: string, password: string): Promise<string | null> => {
+      try {
+        const result = await registerPlayer({ data: { username, password } });
+        if (!result.ok || !result.profile) return result.error ?? "Gagal membuat akun, coba lagi";
+        const next = profileFromAuth(result.profile);
+        setProfile(next);
+        saveProfile(next);
+        setScreen({ name: "dashboard" });
+        setLeaderboardKey((k) => k + 1);
+        return null;
+      } catch (error) {
+        console.error("[auth] daftar gagal:", error);
+        return "Tidak bisa terhubung ke server, coba lagi";
+      }
     },
-    [persist],
+    [],
+  );
+
+  const handleLogin = useCallback(
+    async (username: string, password: string): Promise<string | null> => {
+      try {
+        const result = await loginPlayer({ data: { username, password } });
+        if (!result.ok || !result.profile) return result.error ?? "Username atau sandi salah";
+        const next = profileFromAuth(result.profile);
+        setProfile(next);
+        saveProfile(next);
+        setScreen({ name: "dashboard" });
+        setLeaderboardKey((k) => k + 1);
+        return null;
+      } catch (error) {
+        console.error("[auth] masuk gagal:", error);
+        return "Tidak bisa terhubung ke server, coba lagi";
+      }
+    },
+    [],
   );
 
   const handleCorrect = useCallback(
