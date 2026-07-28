@@ -14,6 +14,41 @@ export type Database = {
   }
   public: {
     Tables: {
+      player_credentials: {
+        Row: {
+          created_at: string
+          password_hash: string
+          password_salt: string
+          player_id: string
+          updated_at: string
+          username_lower: string
+        }
+        Insert: {
+          created_at?: string
+          password_hash: string
+          password_salt: string
+          player_id: string
+          updated_at?: string
+          username_lower: string
+        }
+        Update: {
+          created_at?: string
+          password_hash?: string
+          password_salt?: string
+          player_id?: string
+          updated_at?: string
+          username_lower?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "player_credentials_player_id_fkey"
+            columns: ["player_id"]
+            isOneToOne: true
+            referencedRelation: "players"
+            referencedColumns: ["player_id"]
+          },
+        ]
+      }
       players: {
         Row: {
           ads_watched: number
