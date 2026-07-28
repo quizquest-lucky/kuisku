@@ -9,7 +9,7 @@ import { PrepScreen } from "@/components/quiz/PrepScreen";
 import { LoadingScreen } from "@/components/quiz/LoadingScreen";
 import { GameScreen } from "@/components/quiz/GameScreen";
 import { getFallbackQuestions } from "@/lib/fallback-questions";
-import { generateQuestions, syncPlayer } from "@/lib/quiz.functions";
+import { generateQuestions, loginPlayer, registerPlayer, syncPlayer } from "@/lib/quiz.functions";
 import {
   AD_MILESTONE,
   MILESTONE_BONUS,
@@ -22,8 +22,8 @@ import {
 } from "@/lib/quiz-config";
 import {
   clearProfile,
-  createProfile,
   loadProfile,
+  profileFromAuth,
   purgeLegacyGeminiKey,
   saveProfile,
   type PlayerProfile,
