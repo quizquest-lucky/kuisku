@@ -26,5 +26,4 @@ npm run dev
 - TanStack Start
 - TypeScript
 - React
-- Tailwind CSS
--  
+- Tailwind CSS 
